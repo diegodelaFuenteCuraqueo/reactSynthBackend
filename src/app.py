@@ -33,17 +33,6 @@ def getPreset(id):
   except Exception as e:
     return jsonify({ 'error': str(e) })
 
-#@app.route('/synth-presets/name/<name>')
-#def getPresetByName(name):
-#  try:
-#    cursor = connection.connection.cursor()
-#    cursor.execute('SELECT name, modulation_index, harmonicity, low_key, number_of_keys FROM tbl_FM_presets WHERE name=%s', (name))
-#    dato = cursor.fetchone()
-#    preset={ 'name': dato[0], 'modulation_index': dato[1], 'harmonicity': dato[2], 'low_key': dato[3], 'number_of_keys': dato[4] }
-#    return jsonify({ 'preset': preset})
-#  except Exception as e:
-#    return jsonify({ 'error': str(e) })
-
 @app.route('/synth-presets', methods=['POST'])
 def addPreset():
   try:
