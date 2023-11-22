@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
+from flask_cors import CORS
 from config import config
 
 app = Flask(__name__)
+CORS(app)
 connection = MySQL(app)
 
 @app.route('/synth-presets')
@@ -20,7 +22,7 @@ def synth_presets():
   except Exception as e:
     return jsonify({ 'error': str(e) })
 
-@app.route('/synth-presets/id/<id>')
+@app.route('/synth-presets/<id>')
 def getPreset(id):
   try:
     cursor = connection.connection.cursor()
