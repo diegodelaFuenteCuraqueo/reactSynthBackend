@@ -2,12 +2,11 @@ from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
 from config import config
 
-app=Flask(__name__)
+app = Flask(__name__)
 connection = MySQL(app)
 
 @app.route('/synth-presets')
 def synth_presets():
-  #return 'Synth Presets'
   try:
     cursor = connection.connection.cursor()
     cursor.execute('SELECT name, modulation_index, harmonicity, low_key, number_of_keys FROM tbl_FM_presets')
@@ -50,6 +49,26 @@ def addPreset():
     cursor.execute('INSERT INTO tbl_FM_presets (name, modulation_index, harmonicity, low_key, number_of_keys) VALUES (%s, %s, %s, %s, %s)', (request.json['name'], request.json['modulation_index'], request.json['harmonicity'], request.json['low_key'], request.json['number_of_keys']))
     connection.connection.commit()
     return jsonify({ 'message': 'Preset added successfully' })
+  except Exception as e:
+    return jsonify({ 'error': str(e) })
+
+@app.route('/synth-presets/<id>', methods=['PUT'])
+def updatePreset(id):
+  try:
+    cursor = connection.connection.cursor()
+    cursor.execute('UPDATE tbl_FM_presets SET name=%s, modulation_index=%s, harmonicity=%s, low_key=%s, number_of_keys=%s WHERE id=%s', (request.json['name'], request.json['modulation_index'], request.json['harmonicity'], request.json['low_key'], request.json['number_of_keys'], id))
+    connection.connection.commit()
+    return jsonify({ 'message': 'Preset updated successfully' })
+  except Exception as e:
+    return jsonify({ 'error': str(e) })
+
+@app.route('/synth-presets/<id>', methods=['DELETE'])
+def deletePreset(id):
+  try:
+    cursor = connection.connection.cursor()
+    cursor.execute('DELETE FROM tbl_FM_presets WHERE id=%s', (id))
+    connection.connection.commit()
+    return jsonify({ 'message': 'Preset deleted successfully' })
   except Exception as e:
     return jsonify({ 'error': str(e) })
 
